@@ -70,7 +70,6 @@ elements:
     label: Starting Position
     screens:
       - ObjectivePregame
-      - PitAuto
     field:
       fieldType: Dropdown
       options:
@@ -82,7 +81,6 @@ elements:
     label: Touching Subwoofer?
     screens:
       - ObjectivePregame
-      - PitAuto
     field:
       fieldType: Boolean
     colour: teal
@@ -90,7 +88,6 @@ elements:
     label: Preload
     screens:
       - ObjectivePregame
-      - PitAuto
     field:
       fieldType: Boolean
     colour: teal
@@ -101,8 +98,8 @@ elements:
     field:
       fieldType: Boolean
     colour: teal
-  - name: attemptedPiecesPickedUp
-    label: Attempted Game Pieces Picked Up (anywhere)
+  - name: gamePiecesMissedWing
+    label: Game Pieces Missed Wing
     screens:
       - ObjectiveAuto
     field:
@@ -115,7 +112,16 @@ elements:
     label: Game Pieces Picked Up From Wing
     screens:
       - ObjectiveAuto
-      - PitAuto
+    field:
+      fieldType: Numeric
+      isInteger: true
+      incrementable: true
+      min: 0
+    colour: red
+  - name: gamePiecesMissedCenter
+    label: Game Pieces Missed Center
+    screens:
+      - ObjectiveAuto
     field:
       fieldType: Numeric
       isInteger: true
@@ -126,15 +132,14 @@ elements:
     label: Game Pieces Picked Up From Center
     screens:
       - ObjectiveAuto
-      - PitAuto
     field:
       fieldType: Numeric
       isInteger: true
       incrementable: true
       min: 0
     colour: red
-  - name: attemptedAutoSpeaker
-    label: Auto Game Pieces Speaker Attempted
+  - name: missedAutoSpeaker
+    label: Auto Game Pieces Missed Speaker
     screens:
       - ObjectiveAuto
     field:
@@ -147,15 +152,14 @@ elements:
     label: Auto Game Pieces Speaker
     screens:
       - ObjectiveAuto
-      - PitAuto
     field:
       fieldType: Numeric
       isInteger: true
       incrementable: true
       min: 0
     colour: orange
-  - name: attemptedAutoAmp
-    label: Auto Game Pieces Amp Attempted
+  - name: missedAutoAmp
+    label: Auto Game Pieces Missed Amp
     screens:
       - ObjectiveAuto
     field:
@@ -168,17 +172,6 @@ elements:
     label: Auto Game Pieces Amp
     screens:
       - ObjectiveAuto
-      - PitAuto
-    field:
-      fieldType: Numeric
-      isInteger: true
-      incrementable: true
-      min: 0
-    colour: orange
-  - name: attemptedAutoFloor
-    label: Auto Game Pieces Deposited Floor Attempted
-    screens:
-      - ObjectiveAuto
     field:
       fieldType: Numeric
       isInteger: true
@@ -186,10 +179,9 @@ elements:
       min: 0
     colour: orange
   - name: autoFloor
-    label: Auto Game Pieces Deposited Floor
+    label: Auto Game Pieces Deposited Floor (Intentionally)
     screens:
       - ObjectiveAuto
-      - PitAuto
     field:
       fieldType: Numeric
       isInteger: true
@@ -200,7 +192,6 @@ elements:
     label: Exited Starting Zone
     screens:
       - ObjectiveAuto
-      - PitAuto
     field:
       fieldType: Boolean
     colour: yellow
@@ -214,49 +205,34 @@ elements:
         - label: Collection Point
           name: collectionPoint
           field:
-            default: Source Floor
+            default: Source
             fieldType: Dropdown
             options:
-              - Alliance Wing
-              - Opposing Source
-              - Midfield
+              - Ally Wing
+              - Mid
               - Source
-              - Source Floor
-              - Opposing Wing
+              - Opp Wing
               - Other
           screens:
             - ObjectiveTeleop
           colour: red
-        - label: Route
-          name: route
-          default: N/A
-          screens:
-            - ObjectiveTeleop
-          field:
-            fieldType: Dropdown
-            options:
-              - N/A
-              - Amp
-              - Stage
-              - Source
-          colour: yellow
         - label: Shooting Area
           name: shootingArea
-          default: Starting
+          default: Subwoofer
           screens:
             - ObjectiveTeleop
           field:
             fieldType: Dropdown
             options:
               - Subwoofer
-              - Starting
-              - Podium
-              - Wing
+              - Stage
+              - Wing Src
+              - Wing Amp
               - Other
           colour: orange
         - label: Scoring Area
           name: scoringArea
-          default: None
+          default: Speaker
           screens:
             - ObjectiveTeleop
           field:
@@ -267,17 +243,13 @@ elements:
               - Ferry
               - Trap
           colour: orange
-        - label: Scoring Outcome
-          name: scoringOutcome
+        - label: Scoring Successful?
+          name: scoringSuccess
           default: Success
           screens:
             - ObjectiveTeleop
           field:
-            fieldType: Dropdown
-            options:
-              - Success
-              - Miss
-              - Bounce Out
+            fieldType: Boolean
           colour: orange
         - label: Amplified?
           name: amplified
@@ -305,23 +277,14 @@ elements:
           screens:
             - ObjectiveTeleop
           colour: yellow
-        - label: Offensive Fouls
-          name: offensiveFouls
+        - label: Played Defense?
+          name: playedDefense
+          default: False
+          field:
+            fieldType: Boolean
           screens:
             - ObjectiveTeleop
-          field:
-            fieldType: Numeric
-            isInteger: true
-            incrementable: true
-            min: 0
-          colour: blue
-  - name: defensiveCycles
-    label: Defensive Cycles
-    screens:
-      - ObjectiveTeleop
-    field:
-      fieldType: Grouping
-      fields:
+          colour: yellow
         - label: Pins
           name: pins
           screens:
@@ -332,24 +295,8 @@ elements:
             incrementable: true
             min: 0
           colour: yellow
-        - label: Defense Location
-          name: defenseLocation
-          default: Other
-          screens:
-            - ObjectiveTeleop
-          field:
-            fieldType: Dropdown
-            options:
-              - Allied Amp
-              - Opposing Amp
-              - Allied Source
-              - Opposing Source
-              - Allied Wing
-              - Opposing Wing
-              - Other
-          colour: yellow
-        - label: Defensive Fouls
-          name: defensiveFouls
+        - label: Fouls
+          name: fouls
           screens:
             - ObjectiveTeleop
           field:
@@ -358,16 +305,6 @@ elements:
             incrementable: true
             min: 0
           colour: blue
-        - label: Defense Time
-          name: defenseTime
-          screens:
-            - ObjectiveTeleop
-          field:
-            fieldType: Numeric
-            isInteger: false
-            incrementable: false
-            min: 0
-          colour: yellow
   - name: climbStatus
     label: Climb Status
     screens:
@@ -396,13 +333,6 @@ elements:
     field:
       fieldType: Boolean
     colour: yellow
-  - name: spotlit
-    label: Spotlit
-    screens:
-      - ObjectiveEndgame
-    field:
-      fieldType: Boolean
-    colour: blue
   - name: robotsOnChainWith
     label: Robots On Chain With
     screens:
@@ -414,6 +344,40 @@ elements:
         - "1"
         - "2"
     colour: lime
+  - name: spotlit
+    label: Spotlit
+    screens:
+      - ObjectiveEndgame
+    field:
+      fieldType: Boolean
+    colour: blue
+  - label: Human Player on Team
+    name: humanPlayerOnTeam
+    screens:
+      - ObjectiveEndgame
+    field:
+      fieldType: Boolean
+    colour: blue
+  - label: Human Player Notes Missed
+    name: humanPlayerNotesMissed
+    screens:
+      - ObjectiveEndgame
+    field:
+      fieldType: Numeric
+      isInteger: true
+      incrementable: true
+      min: 0
+    colour: blue
+  - label: Human Player Notes Successful
+    name: humanPlayerNotesSuccess
+    screens:
+      - ObjectiveEndgame
+    field:
+      fieldType: Numeric
+      isInteger: true
+      incrementable: true
+      min: 0
+    colour: blue
   - name: coopertitionBonus
     label: Coopertition Bonus
     screens:
@@ -421,6 +385,13 @@ elements:
     field:
       fieldType: Boolean
     colour: blue
+  - name: disabled
+    label: Disabled
+    screens:
+      - ObjectivePostgame
+    field:
+      fieldType: Boolean
+    colour: yellow
   - name: drivetrainType
     label: Drivetrain Type
     screens:
@@ -443,19 +414,6 @@ elements:
         - "Omni Omni Omni"
         - "Omni Trac Omni"
         - "Trac Trac Traction"
-        - "N/A"
-      default: "N/A"
-  - name: drivetrainSwerve
-    label: Drivetrain Swerve Type
-    screens:
-      - PitDrive
-    field:
-      fieldType: Dropdown
-      options:
-        - "MaxSwerve"
-        - "SwerveX"
-        - "SDS"
-        - "Other"
         - "N/A"
       default: "N/A"
   - name: robotLength

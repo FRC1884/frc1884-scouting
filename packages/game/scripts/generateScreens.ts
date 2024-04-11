@@ -228,10 +228,8 @@ defaultFile.addVariableStatement({
             .filter((s) => s.startsWith("Objective"))
             .forEach((screen) => {
               w.write(
-                `${lowerCaseFirstLetter(screen.slice("objective".length))}: ${
-                  lowerCaseFirstLetter(screen) + "DefaultSchema"
-                }.default(${
-                  lowerCaseFirstLetter(screen) + "DefaultSchema"
+                `${lowerCaseFirstLetter(screen.slice("objective".length))}: ${lowerCaseFirstLetter(screen) + "DefaultSchema"
+                }.default(${lowerCaseFirstLetter(screen) + "DefaultSchema"
                 }.parse({})),`
               );
             });
@@ -257,10 +255,8 @@ defaultFile.addVariableStatement({
             .forEach((screen) => {
               w.write(
                 // remove the pit from the screen name
-                `${lowerCaseFirstLetter(screen.slice("pit".length))}: ${
-                  lowerCaseFirstLetter(screen) + "DefaultSchema"
-                }.default(${
-                  lowerCaseFirstLetter(screen) + "DefaultSchema"
+                `${lowerCaseFirstLetter(screen.slice("pit".length))}: ${lowerCaseFirstLetter(screen) + "DefaultSchema"
+                }.default(${lowerCaseFirstLetter(screen) + "DefaultSchema"
                 }.parse({})),`
               );
             });

@@ -42,7 +42,8 @@
       "clean": "if-file-deleted",
       "dependencies": [
         "gen",
-        "../../packages/game:build"
+        "../../packages/game:build",
+        "../../packages/logger:build"
       ]
     },
     "start": {

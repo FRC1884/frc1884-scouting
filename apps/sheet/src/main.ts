@@ -5,6 +5,8 @@ import {
   PitRecord,
   convertObjectiveFieldsToArray,
   convertPitFieldsToArray,
+  pitHeaders,
+  objectiveHeaders,
 } from "@griffins-scout/game";
 import {
   changeableLog,
@@ -30,7 +32,7 @@ const SHEET_ID = env.SHEET_ID;
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 const KEY_FILE = env.CRED_PATH;
 
-type SheetName = "Quant Import" | "TBA Import" | "Pit Import";
+type SheetName = "Quant Dump" | "TBA Import" | "Pit Import";
 export type Auth =
   | string
   | JWT
@@ -61,7 +63,7 @@ export async function addObjectiveRecord(
 ) {
   await removeObjective(auth);
 
-  const sheet: SheetName = "Quant Import";
+  const sheet: SheetName = "Quant Dump";
   const request = {
     spreadsheetId: SHEET_ID,
 
@@ -72,8 +74,8 @@ export async function addObjectiveRecord(
     resource: {
       range: `'${sheet}'!A2:BZ2`,
       majorDimension: "ROWS",
-      values: record.map((r) => convertObjectiveFieldsToArray(r)),
-      // values: record.map(r => objectiveHeaders())
+      // values: record.map((r) => convertObjectiveFieldsToArray(r)),
+      values: record.map((r) => objectiveHeaders()),
     },
 
     auth,
@@ -102,8 +104,8 @@ export async function addPitRecord(auth: Auth, record: PitRecord[]) {
     resource: {
       range: `'${sheet}'!A2:BZ2`,
       majorDimension: "ROWS",
-      values: record.map((r) => convertPitFieldsToArray(r)),
-      // values: record.map(r => pitHeaders())
+      // values: record.map((r) => convertPitFieldsToArray(r)),
+      values: record.map((r) => pitHeaders()),
     },
 
     auth,
@@ -178,7 +180,7 @@ export async function removeMatches(auth: Auth) {
 }
 
 export async function removeObjective(auth: Auth) {
-  const sheetName: SheetName = "Quant Import";
+  const sheetName: SheetName = "Quant Dump";
 
   const request = {
     spreadsheetId: SHEET_ID,
