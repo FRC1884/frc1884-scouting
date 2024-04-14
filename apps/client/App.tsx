@@ -14,6 +14,8 @@ import { appSettingsAtom } from './state';
 import tw from './utils/tailwind';
 import { trpc } from './utils/trpc';
 
+const hostname = 'DESKTOP-0TS5BCR.local';
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -24,7 +26,7 @@ export default function App() {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `http://IridiumLion.local:8080/trpc`,
+          url: `http://${hostname}:8080/trpc`,
         }),
       ],
       transformer: superjson,
