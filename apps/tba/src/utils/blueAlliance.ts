@@ -33,6 +33,8 @@ export const compLevelToMatchType = (
 ): ObjectiveInfo["matchType"] => {
   if (compLevel === "qm") {
     return "Qualification";
+  } else if (compLevel === "pm") {
+    return "Practice";
   } else {
     return "Elimination";
   }

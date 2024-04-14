@@ -16,7 +16,7 @@
     </p>
     <p class="col-span-1 row-span-1 text-xl font-code">
       <p class="font-bold">Current Match</p>
-      <p >{{store.currentMatch?.comp_level === "qm" ? "qualification" : store.currentMatch?.comp_level}} {{store.currentMatch?.match_number}} ({{ store.currentMatch?.set_number }}) @ ~{{ new Date(store.currentMatch?.predicted_time ?? 0).toLocaleTimeString() }}</p>
+      <p >{{store.currentMatch?.comp_level === "qm" ? "qualification" : store.currentMatch?.comp_level === "pm" ? "practice" : store.currentMatch?.comp_level}} {{store.currentMatch?.match_number}} ({{ store.currentMatch?.set_number }}) @ ~{{ new Date(store.currentMatch?.predicted_time ?? 0).toLocaleTimeString() }}</p>
     </p>
     <p class="col-span-1 row-span-1 text-xl text-right font-code">
       <Station v-for="station in objectiveInfoSchema._def.shape().scoutId.Values" :station="station" :present="currentRecords.some(e => e.info.scoutId === station)"/>
@@ -43,8 +43,8 @@ const recordsFromCurrentMatch = (async () => {
     return [];
   }
 
-  const type = curr.comp_level === 'qm' ? 'Qualification' : "Elimination"
-  const number = type === 'Qualification' ? curr.match_number : curr?.set_number;
+  const type = curr.comp_level === 'qm' ? 'Qualification' : curr.comp_level ==="pm" ? "Practice" : "Elimination"
+  const number = type === 'Qualification' || type === "Practice" ? curr.match_number : curr?.set_number;
 
   return (await client.objective.findByMatch.query({
     matchType: type,
@@ -59,7 +59,7 @@ const currentRecords = ref(await recordsFromCurrentMatch())
 setInterval(async () => {
   console.log("updating current records")
   currentRecords.value = await  recordsFromCurrentMatch()
-}, 10 * 1000)
+}, 5 * 1000)
 
 const store = useCurrentGameStore();
 

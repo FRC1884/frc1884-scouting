@@ -8,10 +8,10 @@ export const matchTypeToObjectiveInfoMatchType = (
   const map = new Map<TBAMatch['comp_level'], ObjectiveInfo['matchType']>([
     ['f', 'Elimination'],
     ['qm', 'Qualification'],
+    ['pm', 'Practice'],
     ['sf', 'Elimination'],
     ['qf', 'Elimination'],
   ]);
 
   return map.get(matchType) ?? 'Practice';
 };
-

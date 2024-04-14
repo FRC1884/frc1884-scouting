@@ -195,8 +195,8 @@ elements:
     field:
       fieldType: Boolean
     colour: yellow
-  - name: offensiveCycles
-    label: Offensive Cycles
+  - name: cycles
+    label: Cycles
     screens:
       - ObjectiveTeleop
     field:

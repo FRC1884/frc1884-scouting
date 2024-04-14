@@ -3,10 +3,8 @@ import {
   ObjectiveInfo,
   ObjectiveRecord,
   PitRecord,
-  convertObjectiveFieldsToArray,
   convertPitFieldsToArray,
-  pitHeaders,
-  objectiveHeaders,
+  convertObjectiveFieldsToArray,
 } from "@griffins-scout/game";
 import {
   changeableLog,
@@ -74,8 +72,8 @@ export async function addObjectiveRecord(
     resource: {
       range: `'${sheet}'!A2:BZ2`,
       majorDimension: "ROWS",
-      // values: record.map((r) => convertObjectiveFieldsToArray(r)),
-      values: record.map((r) => objectiveHeaders()),
+      values: record.map((r) => convertObjectiveFieldsToArray(r)),
+      // values: record.map((r) => objectiveHeaders()),
     },
 
     auth,
@@ -104,8 +102,8 @@ export async function addPitRecord(auth: Auth, record: PitRecord[]) {
     resource: {
       range: `'${sheet}'!A2:BZ2`,
       majorDimension: "ROWS",
-      // values: record.map((r) => convertPitFieldsToArray(r)),
-      values: record.map((r) => pitHeaders()),
+      values: record.map((r) => convertPitFieldsToArray(r)),
+      // values: record.map((r) => pitHeaders()),
     },
 
     auth,
@@ -155,6 +153,8 @@ export const compLevelToMatchType = (
 ): ObjectiveInfo["matchType"] => {
   if (compLevel === "qm") {
     return "Qualification";
+  } else if (compLevel === "pm") {
+    return "Practice";
   } else {
     return "Elimination";
   }

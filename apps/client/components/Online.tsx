@@ -94,13 +94,17 @@ const StartScoutingButton = ({
     setType('objective');
 
     const matchNumber =
-      settings.match?.comp_level === 'qm'
+      settings.match?.comp_level === 'qm' || settings.match?.comp_level === 'pm'
         ? match.match_number
         : match.set_number;
     setInfo(() => ({
       scoutId: scoutId,
       matchType:
-        settings.match?.comp_level === 'qm' ? 'Qualification' : 'Elimination',
+        settings.match?.comp_level === 'qm'
+          ? 'Qualification'
+          : settings.match?.comp_level === 'pm'
+          ? 'Practice'
+          : 'Elimination',
       teamNumber: getTeamFromMatch(match, scoutId),
       matchNumber: matchNumber,
     }));
@@ -263,6 +267,8 @@ function matchToLabel(match: any) {
   return `${
     match.comp_level === 'qm'
       ? 'Qualification'
+      : match.comp_level === 'pm'
+      ? 'Practice'
       : match.comp_level === 'f'
       ? 'Final'
       : 'Elim'

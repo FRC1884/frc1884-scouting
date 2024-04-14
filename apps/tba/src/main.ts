@@ -5,7 +5,9 @@ import {
   intervalWithBar,
 } from "@griffins-scout/logger";
 import { getMatches } from "./utils/blueAlliance.js";
+import { env } from "./utils/env.js";
 import { client } from "./utils/trpc.js";
+import { getPracticeMatches } from "./utils/firstApi.js";
 
 const main = async () => {
   // every 5 min
@@ -23,7 +25,7 @@ async function update() {
     infoMessage(`Importing matches from TBA...`)
   );
 
-  const matches = await getMatches();
+  const matches = env.PRACTICE_MODE ? await getPracticeMatches() : await getMatches();
 
   matchImportStatus.update(infoMessage(`Importing matches from TBA... Done!`));
   matchImportStatus.end();

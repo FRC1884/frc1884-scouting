@@ -77,10 +77,17 @@ export const InputModal = <
     const path = `${name as string}.${(values[name] as any[]).length
       }` as unknown as Path<T>;
 
+    if ((values[name] as any[]).length === 0) {
+      const blank = defaults.shape[name].removeDefault().element.parse({});
+
+      setValue(name as unknown as Path<T>, [blank] as any);
+      return;
+    }
+
     setValue(
       path,
 
-      defaults.shape[name].removeDefault().element.parse({})
+      (values[name] as any[])[(values[name] as any[]).length - 1]
     );
   };
 
