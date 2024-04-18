@@ -9,6 +9,7 @@ export const env = envsafe({
     choices: ["development", "test", "production"],
   }),
   CONTROLLER_URL: url(),
-  SHEET_ID: str(),
+  QA_SHEET_ID: str(),
+  MAIN_SHEET_ID: str(),
   CRED_PATH: str(),
 });

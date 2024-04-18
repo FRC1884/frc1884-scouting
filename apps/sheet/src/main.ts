@@ -26,11 +26,16 @@ import { env } from "./utils/env.js";
 import { client } from "./utils/trpc.js";
 const sheets = google.sheets("v4");
 
-const SHEET_ID = env.SHEET_ID;
+const QA_SHEET_ID = env.QA_SHEET_ID;
+const MAIN_SHEET_ID = env.MAIN_SHEET_ID;
+
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
 const KEY_FILE = env.CRED_PATH;
 
-type SheetName = "Quant Dump" | "TBA Import" | "Pit Import";
+type QARawSheetName = "Quant Dump" | "TBA Import" | "Pit Import";
+type QACopySheetName = "Corrected" | "Copy of Schedule";
+type MainPasteSheetName = "Quant Clean" | "Schedule";
+
 export type Auth =
   | string
   | JWT
@@ -55,15 +60,55 @@ export async function getAuthToken() {
   return authToken as Compute;
 }
 
+export async function copySheet(
+  auth: Auth,
+  qaSheet: QACopySheetName,
+  mainSheet: MainPasteSheetName
+) {
+  // copy, sheets.copyto doesnt work because it makes a new sheet
+
+  // get data from qa sheet
+  const request = {
+    spreadsheetId: QA_SHEET_ID,
+    range: `'${qaSheet}'!A2:BL1000`,
+    auth,
+  };
+
+  const response = await sheets.spreadsheets.values.get(request);
+
+  // paste data to main sheet
+
+  const pasteRequest = {
+    spreadsheetId: MAIN_SHEET_ID,
+    range: `'${mainSheet}'!A2:BL1000`,
+    auth,
+    resource: response.data.values,
+  };
+
+  const pasteResponse = await sheets.spreadsheets.values.update({
+    spreadsheetId: MAIN_SHEET_ID,
+    auth: auth,
+    range: `'${mainSheet}'!A2:BL1000`,
+
+    valueInputOption: "USER_ENTERED",
+
+    requestBody: {
+      range: `'${mainSheet}'!A2:BL1000`,
+      majorDimension: "ROWS",
+      values: response.data.values,
+    },
+  });
+}
+
 export async function addObjectiveRecord(
   auth: Auth,
   record: ObjectiveRecord[]
 ) {
   await removeObjective(auth);
 
-  const sheet: SheetName = "Quant Dump";
+  const sheet: QARawSheetName = "Quant Dump";
   const request = {
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     range: `'${sheet}'!A2:BZ2`,
 
@@ -90,10 +135,10 @@ export async function addObjectiveRecord(
 export async function addPitRecord(auth: Auth, record: PitRecord[]) {
   await removePit(auth);
 
-  const sheet: SheetName = "Pit Import";
+  const sheet: QARawSheetName = "Pit Import";
 
   const request = {
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     range: `'${sheet}'!A2:BZ2`,
 
@@ -117,13 +162,13 @@ export async function addPitRecord(auth: Auth, record: PitRecord[]) {
 }
 
 export async function addMatches(auth: Auth, record: TBAMatch[]) {
-  const sheet: SheetName = "TBA Import";
+  const sheet: QARawSheetName = "TBA Import";
 
   await removeMatches(auth);
 
   const request = {
     // The ID of the spreadsheet to update.
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     // The A1 notation of a range to search for a logical table of data.
     // Values are appended after the last row of the table.
@@ -161,10 +206,10 @@ export const compLevelToMatchType = (
 };
 
 export async function removeMatches(auth: Auth) {
-  const sheetName: SheetName = "TBA Import";
+  const sheetName: QARawSheetName = "TBA Import";
 
   const request = {
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     // The A1 notation of the values to update.
     range: `'${sheetName}'!A${2}:BM${1000}`,
@@ -180,10 +225,10 @@ export async function removeMatches(auth: Auth) {
 }
 
 export async function removeObjective(auth: Auth) {
-  const sheetName: SheetName = "Quant Dump";
+  const sheetName: QARawSheetName = "Quant Dump";
 
   const request = {
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     // The A1 notation of the values to update.
     range: `'${sheetName}'!A${2}:AZ${1000}`,
@@ -199,10 +244,10 @@ export async function removeObjective(auth: Auth) {
 }
 
 export async function removePit(auth: Auth) {
-  const sheetName: SheetName = "Pit Import";
+  const sheetName: QARawSheetName = "Pit Import";
 
   const request = {
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: QA_SHEET_ID,
 
     // The A1 notation of the values to update.
     range: `'${sheetName}'!A${2}:AZ${1000}`,
@@ -427,9 +472,16 @@ async function update() {
   // get data from controller
   // push data to sheet
   const auth = await getAuthToken();
-  // const objectiveRecord: ObjectiveRecord[] = []; // getMatches()
 
-  // await addObjectiveRecord(await auth, objectiveRecord)
+  logInfo("Copying sheets...");
+
+  const copySheetStatus = changeableLog(infoMessage("Copying sheets..."));
+
+  await copySheet(auth, "Corrected", "Quant Clean");
+  await copySheet(auth, "Copy of Schedule", "Schedule");
+
+  copySheetStatus.update(infoMessage("Copying sheets... Done!"));
+  copySheetStatus.end();
 
   logInfo("Updating sheet...");
 
@@ -469,20 +521,20 @@ async function update() {
   );
   objectiveUploadStatus.end();
 
-  const pitDownloadStatus = changeableLog(
-    infoMessage("Downloading pit data...")
-  );
-  const pitRecords = await client.pit.findAll.query();
-  pitDownloadStatus.update(infoMessage("Downloading pit data... Done!"));
-  pitDownloadStatus.end();
-
-  const pitUploadStatus = changeableLog(infoMessage("Uploading pit data..."));
-  await addPitRecord(
-    auth,
-    pitRecords.map((m) => m.content)
-  );
-  pitUploadStatus.update(infoMessage("Uploading pit data... Done!"));
-  pitUploadStatus.end();
+  // const pitDownloadStatus = changeableLog(
+  //   infoMessage("Downloading pit data...")
+  // );
+  // const pitRecords = await client.pit.findAll.query();
+  // pitDownloadStatus.update(infoMessage("Downloading pit data... Done!"));
+  // pitDownloadStatus.end();
+  //
+  // const pitUploadStatus = changeableLog(infoMessage("Uploading pit data..."));
+  // await addPitRecord(
+  //   auth,
+  //   pitRecords.map((m) => m.content)
+  // );
+  // pitUploadStatus.update(infoMessage("Uploading pit data... Done!"));
+  // pitUploadStatus.end();
 
   logInfo("Sheet update complete!");
 }
