@@ -5,10 +5,11 @@ cd /srv/frc1884-scouting
 
 corepack enable >/dev/null 2>&1 || true
 
-if [ -f /etc/frc1884-scouting/controller.env ]; then
+if sudo test -r /etc/frc1884-scouting/controller.env; then
   # Export DATABASE_URL for Prisma during deploy-time schema sync.
   set -a
-  . /etc/frc1884-scouting/controller.env
+  # shellcheck disable=SC1091
+  . <(sudo cat /etc/frc1884-scouting/controller.env)
   set +a
 fi
 
