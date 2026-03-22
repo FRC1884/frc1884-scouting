@@ -5,6 +5,13 @@ cd /srv/frc1884-scouting
 
 corepack enable >/dev/null 2>&1 || true
 
+if [ -f /etc/frc1884-scouting/controller.env ]; then
+  # Export DATABASE_URL for Prisma during deploy-time schema sync.
+  set -a
+  . /etc/frc1884-scouting/controller.env
+  set +a
+fi
+
 corepack yarn install --immutable
 corepack yarn workspace @griffins-scout/logger build
 corepack yarn workspace @griffins-scout/game build
