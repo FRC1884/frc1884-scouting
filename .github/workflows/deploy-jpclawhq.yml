@@ -32,4 +32,4 @@ jobs:
           SSH_HOST: ${{ secrets.JPCLAWHQ_HOST }}
         run: |
           ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes mariano@"$SSH_HOST" \
-            'cd /srv/frc1884-scouting && ./scripts/deploy-jpclawhq.sh'
+            'cd /srv/frc1884-scouting && git fetch origin && git checkout main && git pull --ff-only origin main && ./scripts/deploy-jpclawhq.sh'
