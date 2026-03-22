@@ -1,0 +1,19 @@
+[Unit]
+Description=FRC 1884 Scouting Controller
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=mariano
+Group=mariano
+WorkingDirectory=/srv/frc1884-scouting
+Environment=NODE_ENV=production
+Environment=PORT=3011
+EnvironmentFile=/etc/frc1884-scouting/controller.env
+ExecStart=/usr/bin/node /srv/frc1884-scouting/apps/controller/dist/src/server.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

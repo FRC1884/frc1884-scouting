@@ -4,7 +4,7 @@
       <div
         style="color: red"
         class="absolute bottom-0 left-0 right-0 top-0 m-auto aspect-square h-4/5 border-2 border-phoenix-red"
-      />
+      ></div>
     </QrStream>
   </div>
 </template>

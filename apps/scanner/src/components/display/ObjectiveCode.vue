@@ -21,15 +21,14 @@
       v-else
       class="h-[300px] w-[300px] transition-all"
       :class="props.color === 'red' ? 'bg-phoenix-red' : 'bg-griffins-blue'"
-    />
+    ></div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { encodeObjectiveInfo, ObjectiveInfo } from '@griffins-scout/game';
-import { computed } from '@vue/reactivity';
 import QrcodeVue from 'qrcode.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const show = ref(false);
 

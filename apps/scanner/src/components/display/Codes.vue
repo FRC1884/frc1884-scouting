@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { ObjectiveInfo, objectiveInfoSchema } from '@griffins-scout/game';
-import { computed } from '@vue/reactivity';
+import { computed } from 'vue';
 import { RouterOutput } from '~/api';
 import { matchTypeToObjectiveInfoMatchType } from '../util/converter';
 import ObjectiveCode from './ObjectiveCode.vue';
@@ -39,18 +39,7 @@ const objectiveMatchType = computed(() =>
   matchTypeToObjectiveInfoMatchType(props.match.comp_level)
 );
 
-const objectiveScoutIds = computed(
-  () =>
-    [
-      ...Object.keys(objectiveInfoSchema._def.shape().scoutId.Values),
-    ] as ObjectiveInfo['scoutId'][]
-);
-
-// TODO: make this work for FTC
-const blueTeams = computed(() =>
-  props.match.alliances.blue.team_keys.map((team) => team.slice(3))
-);
-const redTeams = computed(() =>
-  props.match.alliances.red.team_keys.map((team) => team.slice(3))
-);
+const objectiveScoutIds = [
+  ...Object.keys(objectiveInfoSchema._def.shape().scoutId.Values),
+] as ObjectiveInfo['scoutId'][];
 </script>
