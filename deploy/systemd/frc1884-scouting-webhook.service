@@ -1,0 +1,18 @@
+[Unit]
+Description=FRC 1884 Scouting GitHub Webhook
+After=network.target
+
+[Service]
+Type=simple
+User=mariano
+Group=mariano
+WorkingDirectory=/srv/frc1884-scouting
+Environment=NODE_ENV=production
+Environment=PORT=3012
+EnvironmentFile=/etc/frc1884-scouting/webhook.env
+ExecStart=/usr/bin/node /srv/frc1884-scouting/scripts/github-webhook-server.mjs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
