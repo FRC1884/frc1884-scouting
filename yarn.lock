@@ -2738,6 +2738,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@griffins-scout/viewer@workspace:apps/viewer":
+  version: 0.0.0-use.local
+  resolution: "@griffins-scout/viewer@workspace:apps/viewer"
+  dependencies:
+    "@griffins-scout/api": "npm:*"
+    "@trpc/client": "npm:^10.35.0"
+    "@trpc/server": "npm:^10.35.0"
+    "@types/node": "npm:^18.7.14"
+    "@vitejs/plugin-vue": "npm:^3.0.3"
+    autoprefixer: "npm:^10.4.8"
+    postcss: "npm:^8.4.16"
+    prettier: "npm:^2.5.1"
+    prettier-plugin-tailwindcss: "npm:^0.1.13"
+    superjson: "npm:^1.13.1"
+    tailwindcss: "npm:^3.1.8"
+    typescript: "npm:^4.8.2"
+    vite: "npm:^3.0.9"
+    vue: "npm:^3.2.38"
+    vue-tsc: "npm:^0.40.5"
+  languageName: unknown
+  linkType: soft
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"

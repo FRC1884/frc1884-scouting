@@ -52,8 +52,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "postinstall": "cd .. && cd .. && cd packages/game && yarn build",
+    "start": "EXPO_NO_CLEAR=1 expo start",
+    "postinstall": "yarn workspace @griffins-scout/game build",
     "android": "expo",
     "build": "eas build -p android --profile preview",
     "ios": "expo run:ios"

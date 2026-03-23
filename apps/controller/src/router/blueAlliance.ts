@@ -31,9 +31,14 @@ export const blueAllianceRouter = router({
     }),
 
   findAllClean: publicProcedure.query(async ({ ctx: { db } }) => {
-    return (await db.tBARecord.findMany()).map((record) => record.content as unknown as TBAMatch).map(m => ({
-      key: m.key, comp_level: m.comp_level, match_number: m.match_number, set_number: m.set_number
-    }));
+    return (await db.tBARecord.findMany())
+      .map((record: { content: unknown }) => record.content as TBAMatch)
+      .map((m: TBAMatch) => ({
+        key: m.key,
+        comp_level: m.comp_level,
+        match_number: m.match_number,
+        set_number: m.set_number,
+      }));
   }),
 
   deleteAll: publicProcedure.mutation(async ({ ctx: { db } }) => {

@@ -2,15 +2,13 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 import { defineConfig } from 'vite';
 
-// https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   const base =
-    command === 'serve' ? '/' : process.env.SCOUTING_BASE_PATH ?? '/scouting/';
+    command === 'serve' ? '/' : process.env.SCOUTING_VIEWER_BASE_PATH ?? '/viewer/';
 
   return {
     base,
     clearScreen: false,
-    // @ts-ignore
     plugins: [vue()],
     resolve: {
       alias: {
@@ -30,14 +28,6 @@ export default defineConfig(({ command }) => {
             process.env.SCOUTING_CONTROLLER_ORIGIN ?? 'http://127.0.0.1:8080',
           changeOrigin: true,
         },
-      },
-    },
-    optimizeDeps: {
-      // link: ['@griffins-scout/game'],
-    },
-    build: {
-      commonjsOptions: {
-        include: [/@griffins-scout\/game/, /node_modules/],
       },
     },
   };

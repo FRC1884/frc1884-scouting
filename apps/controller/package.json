@@ -11,7 +11,7 @@
     "push": "wireit",
     "cron:start": "crontab cron",
     "cron:stop": "crontab -r",
-    "dev": "concurrently --kill-others --names \"BUILD,RUN\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc --build -w --pretty\" \"nodemon -q -w dist dist/src/server.js\""
+    "dev": "concurrently --kill-others --names \"BUILD,RUN\" -c \"bgBlue.bold,bgMagenta.bold\" \"tsc --build -w --pretty --preserveWatchOutput\" \"nodemon -q -w dist --exec node dist/src/server.js\""
   },
   "wireit": {
     "gen": {
