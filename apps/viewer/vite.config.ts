@@ -23,11 +23,6 @@ export default defineConfig(({ command }) => {
             process.env.SCOUTING_CONTROLLER_ORIGIN ?? 'http://127.0.0.1:8080',
           changeOrigin: true,
         },
-        '/trpc-playground': {
-          target:
-            process.env.SCOUTING_CONTROLLER_ORIGIN ?? 'http://127.0.0.1:8080',
-          changeOrigin: true,
-        },
       },
     },
   };

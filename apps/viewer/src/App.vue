@@ -29,14 +29,6 @@
               >
                 Open Scanner
               </a>
-              <a
-                class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-sea hover:text-sea"
-                href="/trpc-playground"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open API Playground
-              </a>
               <button
                 class="rounded-full border border-gold/70 bg-gold/20 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold/30"
                 type="button"
@@ -254,7 +246,7 @@ const scannerUrl = computed(() => {
   const configured = import.meta.env.VITE_SCANNER_URL;
   if (configured) return configured;
 
-  return new URL('http://127.0.0.1:3001').toString();
+  return new URL('http://localhost:3001').toString();
 });
 
 const uniqueObjectiveTeams = computed(() => {
