@@ -11,12 +11,11 @@
                 Griffins Scout Viewer
               </p>
               <h1 class="max-w-3xl font-display text-4xl font-bold leading-tight text-ink md:text-5xl">
-                One place to launch tools now and inspect scouting data as the web viewer grows.
+                 Launch into 1884's Scouting Operation!
               </h1>
               <p class="max-w-2xl text-sm leading-7 text-slate-700 md:text-base">
-                This viewer is the new web entrypoint. It can launch the scanner immediately,
-                check controller health, and surface recent objective, pit, and match data from
-                the backend.
+                This viewer is the entrypoint. You can launch the scanner, view data, correct data, and see scout 
+                performance from one location.
               </p>
             </div>
 
@@ -64,7 +63,7 @@
                   Live Status
                 </p>
                 <h2 class="mt-2 font-display text-2xl font-semibold">
-                  Viewer Mission Board
+                  Current State of Data
                 </h2>
               </div>
               <span
@@ -99,10 +98,10 @@
                 Next Viewer Areas
               </p>
               <ul class="mt-3 space-y-2 text-sm text-slate-200">
-                <li>Team drill-down pages with averages and trends</li>
-                <li>Match planning and alliance comparison views</li>
-                <li>Pit + objective merged summaries</li>
-                <li>Export and sync controls for operators</li>
+                <li>QA controller to correct data</li>
+                <li>Scout performance dashboard</li>
+                <li>Raw data viewer</li>
+                <li>Fix viewer</li>
               </ul>
             </div>
 
