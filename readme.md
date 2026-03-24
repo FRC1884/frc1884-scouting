@@ -12,7 +12,6 @@ It can automatically pull from TBA and stores data in sql.
 
 Currently, this is a work in progress.
 
-- [ ] Create viewer app
 - [ ] app UI redesign, bigger and easier to use buttons
 - [ ] points field onto scoring elements so that the app can do math?
 - [ ] data sharing systems
