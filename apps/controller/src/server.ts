@@ -53,8 +53,8 @@ const main = async () => {
   app.get("/", (req, res) => res.send("Express + Prisma + tRPC + tRPC Shield"));
   app.get("/healthz", (req, res) => res.status(200).json({ ok: true }));
 
-  app.listen(env.PORT, () => {
-    logInfo(`Server listening at http://localhost:${env.PORT}`);
+  app.listen(env.PORT, env.HOST, () => {
+    logInfo(`Server listening at http://${env.HOST}:${env.PORT}`);
   });
 };
 

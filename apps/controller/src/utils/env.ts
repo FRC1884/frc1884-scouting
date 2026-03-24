@@ -8,9 +8,11 @@ export const env = envsafe({
     devDefault: "development",
     choices: ["development", "test", "production"],
   }),
+  HOST: str({
+    devDefault: "127.0.0.1",
+  }),
   PORT: port({
     devDefault: 8080,
   }),
   DATABASE_URL: url(),
 });
-

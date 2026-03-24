@@ -15,7 +15,7 @@ export const createContext = () => {
     ],
   });
 
-  db.$on("query", (e) => {
+  db.$on("query", (e: any) => {
     logInfoWithHeading("Query", e.query);
     logInfo("Duration: " + e.duration + "ms");
   });

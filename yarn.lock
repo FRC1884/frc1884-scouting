@@ -2738,6 +2738,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@griffins-scout/viewer@workspace:apps/viewer":
+  version: 0.0.0-use.local
+  resolution: "@griffins-scout/viewer@workspace:apps/viewer"
+  dependencies:
+    "@griffins-scout/api": "npm:*"
+    "@trpc/client": "npm:^10.35.0"
+    "@trpc/server": "npm:^10.35.0"
+    "@types/node": "npm:^18.7.14"
+    "@vitejs/plugin-vue": "npm:^3.0.3"
+    autoprefixer: "npm:^10.4.8"
+    postcss: "npm:^8.4.16"
+    prettier: "npm:^2.5.1"
+    prettier-plugin-tailwindcss: "npm:^0.1.13"
+    superjson: "npm:^1.13.1"
+    tailwindcss: "npm:^3.1.8"
+    typescript: "npm:^4.8.2"
+    vite: "npm:^3.0.9"
+    vue: "npm:^3.2.38"
+    vue-tsc: "npm:^0.40.5"
+  languageName: unknown
+  linkType: soft
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -5380,9 +5402,9 @@ __metadata:
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001578, caniuse-lite@npm:^1.0.30001587":
-  version: 1.0.30001589
-  resolution: "caniuse-lite@npm:1.0.30001589"
-  checksum: 10c0/20debfb949413f603011bc7dacaf050010778bc4f8632c86fafd1bd0c43180c95ae7c31f6c82348f6309e5e221934e327c3607a216e3f09640284acf78cd6d4d
+  version: 1.0.30001781
+  resolution: "caniuse-lite@npm:1.0.30001781"
+  checksum: 10c0/79e77d8759a55e90f0f5db96ab9e7925c7b2e3021f77852e647e45f64f7dc701954174188438e84b810824afc16d706c64a38f20f9c1ed9ac174b6362d33325f
   languageName: node
   linkType: hard
 

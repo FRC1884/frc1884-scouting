@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "dev": "concurrently --handle-input --raw --kill-others --names \"CONTROLLER,VIEWER,CLIENT,SCANNER\" -c \"bgYellow.bold,bgRed.bold,bgBlue.bold,bgGreen.bold\" \"cd apps/controller && yarn dev\" \"cd apps/viewer && yarn dev\" \"cd apps/client && yarn start\" \"cd apps/scanner && yarn dev\""
+    "dev": "yarn workspace @griffins-scout/game build && yarn workspace @griffins-scout/logger build && yarn workspace @griffins-scout/api build && concurrently --handle-input --kill-others --names \"CONTROLLER,CLIENT,SCANNER,VIEWER\" -c \"bgYellow.bold,bgRed.bold,bgBlue.bold,bgMagenta.bold\" \"yarn workspace @griffins-scout/controller dev\" \"yarn workspace @griffins-scout/client start\" \"yarn workspace @griffins-scout/scanner dev\" \"yarn workspace @griffins-scout/viewer dev\""
   },
   "repository": {
     "type": "git",
