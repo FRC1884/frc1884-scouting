@@ -1,0 +1,45 @@
+name: PR check
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build shared packages
+        run: |
+          yarn workspace @griffins-scout/game build
+          yarn workspace @griffins-scout/logger build
+          yarn workspace @griffins-scout/api build
+
+      - name: Build apps
+        run: |
+          yarn workspace @griffins-scout/controller build
+          yarn workspace @griffins-scout/scanner build
+          yarn workspace @griffins-scout/viewer build
+          yarn workspace @griffins-scout/tba build
+          yarn workspace @griffins-scout/sheet build
