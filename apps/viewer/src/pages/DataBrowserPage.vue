@@ -108,6 +108,7 @@
           :subtitle="`Match ${record.content.info.matchType} ${record.content.info.matchNumber}`"
           :value="recordDrafts[record.id] ?? formatJson(record.content)"
           :saving="savingRecordIds.has(record.id)"
+          :disabled="!canEditData"
           @update:value="$emit('update-record-draft', record.id, $event)"
           @save="$emit('save-objective-record', record.id)"
         />
@@ -116,6 +117,9 @@
           class="rounded-3xl border border-dashed border-slate-300 p-6 text-sm text-slate-500"
         >
           No objective records were found for this match.
+        </p>
+        <p v-if="!canEditData" class="text-sm text-slate-500">
+          Sign in as an `editor` or `admin` to save changes.
         </p>
       </div>
     </div>
@@ -177,6 +181,7 @@
             :subtitle="record.content.info.scoutId"
             :value="recordDrafts[record.id] ?? formatJson(record.content)"
             :saving="savingRecordIds.has(record.id)"
+            :disabled="!canEditData"
             @update:value="$emit('update-record-draft', record.id, $event)"
             @save="$emit('save-objective-record', record.id)"
           />
@@ -202,6 +207,7 @@
             subtitle="Pit record"
             :value="recordDrafts[record.id] ?? formatJson(record.content)"
             :saving="savingRecordIds.has(record.id)"
+            :disabled="!canEditData"
             @update:value="$emit('update-record-draft', record.id, $event)"
             @save="$emit('save-pit-record', record.id)"
           />
@@ -230,6 +236,7 @@ defineProps<{
   loadingMatchView: boolean;
   loadingTeamView: boolean;
   errorMessage: string | null;
+  canEditData: boolean;
   selectedMode: 'match' | 'team';
   selectedMatchType: MatchType;
   selectedMatchNumber: number;

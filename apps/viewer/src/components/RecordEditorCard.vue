@@ -16,6 +16,7 @@
     <textarea
       class="mt-4 min-h-[18rem] w-full rounded-3xl border border-slate-200 bg-slate-950 px-4 py-4 font-mono text-sm leading-6 text-slate-100 outline-none transition focus:border-gold"
       :value="value"
+      :disabled="disabled"
       @input="handleInput"
     ></textarea>
 
@@ -23,10 +24,10 @@
       <button
         class="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-sea disabled:cursor-not-allowed disabled:opacity-60"
         type="button"
-        :disabled="saving"
+        :disabled="saving || disabled"
         @click="$emit('save')"
       >
-        {{ saving ? 'Saving…' : 'Save Changes' }}
+        {{ saving ? 'Saving…' : disabled ? 'Read Only' : 'Save Changes' }}
       </button>
     </div>
   </article>
@@ -40,6 +41,7 @@ defineProps<{
   subtitle: string;
   value: string;
   saving: boolean;
+  disabled: boolean;
 }>();
 
 const emit = defineEmits<{

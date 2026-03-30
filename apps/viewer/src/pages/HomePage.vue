@@ -2,7 +2,7 @@
   <section
     class="overflow-hidden rounded-[2rem] border border-white/70 bg-white/70 shadow-panel backdrop-blur"
   >
-    <div class="grid gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
+    <div class="grid items-start gap-8 p-8 lg:grid-cols-[1.2fr_0.8fr] lg:p-10">
       <div class="space-y-6">
         <div class="space-y-3">
           <p class="font-code text-xs uppercase tracking-[0.35em] text-sea">Landing Page</p>
@@ -17,6 +17,7 @@
 
         <div class="flex flex-wrap gap-3">
           <a
+            v-if="canOpenScanner"
             class="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-sea"
             :href="scannerUrl"
             target="_blank"
@@ -24,6 +25,14 @@
           >
             Open Scanner
           </a>
+          <button
+            v-else
+            class="rounded-full border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-semibold text-slate-400"
+            type="button"
+            disabled
+          >
+            Scanner Requires Editor/Admin
+          </button>
           <button
             class="rounded-full border border-gold/70 bg-gold/20 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-gold/30"
             type="button"
@@ -69,13 +78,13 @@
               :disabled="entry.disabled"
               @click="$emit('open-page', entry.value)"
             >
-              {{ entry.disabled ? 'Coming Soon' : `Open ${entry.label}` }}
+              {{ entry.disabled ? 'Unavailable' : `Open ${entry.label}` }}
             </button>
           </article>
         </div>
       </div>
 
-      <div class="space-y-4 rounded-[1.5rem] bg-ink p-6 text-white">
+      <div class="self-start space-y-4 rounded-[1.5rem] bg-ink p-6 text-white">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="font-code text-xs uppercase tracking-[0.3em] text-gold/80">Live Status</p>
@@ -95,12 +104,16 @@
             <span class="font-code text-gold">{{ scannerUrl }}</span>
           </p>
           <p>
-            Default browser page:
-            <span class="text-slate-300">separate workspace for DB inspection and editing</span>
+            Scanner access:
+            <span class="text-slate-300">editor and admin roles only</span>
           </p>
           <p>
-            Navigation model:
-            <span class="text-slate-300">dedicated pages linked from the landing page</span>
+            First admin:
+            <span class="text-slate-300">must be created manually, no default account exists</span>
+          </p>
+          <p>
+            User management:
+            <span class="text-slate-300">admin-only page for assigning roles</span>
           </p>
         </div>
 
@@ -124,23 +137,17 @@
 </template>
 
 <script setup lang="ts">
-import type { PageCard, ViewerPage } from '../types/viewer';
+import type { PageCard, ViewerPage, ViewerStat } from '../types/viewer';
 
 defineProps<{
   scannerUrl: string;
+  canOpenScanner: boolean;
   isRefreshing: boolean;
   controllerOk: boolean;
   errorMessage: string | null;
   pageCards: PageCard[];
-  stats: Array<{
-    label: string;
-    value: number;
-    caption: string;
-  }>;
+  stats: ViewerStat[];
 }>();
 
-defineEmits<{
-  (event: 'refresh'): void;
-  (event: 'open-page', page: ViewerPage): void;
-}>();
+defineEmits(['refresh', 'open-page']);
 </script>

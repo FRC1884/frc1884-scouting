@@ -1,6 +1,7 @@
 import { PitRecord, pitRecordSchema } from "@griffins-scout/game";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc.js";
+import { requireRole } from "../utils/auth.js";
+import { protectedProcedure, publicProcedure, router } from "../trpc.js";
 
 export const pitRouter = router({
   findAll: publicProcedure.query(async ({ ctx: { db } }) => {
@@ -53,15 +54,16 @@ export const pitRouter = router({
       return records.filter((r) => r.content.info.teamNumber === input.teamNumber);
     }),
 
-  updateOne: publicProcedure
+  updateOne: protectedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
         record: pitRecordSchema,
       })
     )
-    .mutation(async ({ input, ctx: { db } }) => {
-      await db.pitRecord.update({
+    .mutation(async ({ input, ctx }) => {
+      requireRole(ctx, ["ADMIN", "EDITOR"]);
+      await ctx.db.pitRecord.update({
         where: { id: input.id },
         data: { content: input.record },
       });

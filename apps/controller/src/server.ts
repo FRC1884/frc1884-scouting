@@ -5,6 +5,7 @@ import express from "express";
 import { expressHandler } from "trpc-playground/handlers/express";
 import { createContext } from "./context.js";
 import { TBAMatch } from "./interfaces/match.js";
+import { authRouter } from "./router/auth.js";
 import { blueAllianceRouter } from "./router/blueAlliance.js";
 import { objectiveRouter } from "./router/objective.js";
 import { pitRouter } from "./router/pit.js";
@@ -14,6 +15,7 @@ import { router } from "./trpc.js";
 import { env } from "./utils/env.js";
 
 const appRouter = router({
+  auth: authRouter,
   record: recordRouter,
   blueAlliance: blueAllianceRouter,
   objective: objectiveRouter,

@@ -1,4 +1,5 @@
 import { initTRPC } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { Context } from "./context";
 import { logErrorWithHeading, logInfo, logInfoWithHeading } from "@griffins-scout/logger";
@@ -31,3 +32,15 @@ const logger = t.middleware(async ({ path, type, next }) => {
 export const router = t.router;
 export const mergeRouters = t.mergeRouters;
 export const publicProcedure = t.procedure.use(logger);
+export const protectedProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "You must be logged in to perform this action.",
+    });
+  }
+
+  return next({
+    ctx,
+  });
+});
