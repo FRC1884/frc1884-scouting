@@ -62,4 +62,35 @@ export const objectiveRouter = router({
         );
       }) as unknown as { id: string; content: ObjectiveRecord }[];
     }),
+
+  findByTeam: publicProcedure
+    .input(
+      z.object({
+        teamNumber: objectiveInfoSchema.shape.teamNumber,
+      })
+    )
+    .query(async ({ input, ctx: { db } }) => {
+      const records = (await db.objectiveRecord.findMany({})) as unknown as {
+        id: string;
+        content: ObjectiveRecord;
+      }[];
+
+      return records.filter((r) => {
+        return r.content.info.teamNumber === input.teamNumber;
+      }) as unknown as { id: string; content: ObjectiveRecord }[];
+    }),
+
+  updateOne: publicProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        record: objectiveRecordSchema,
+      })
+    )
+    .mutation(async ({ input, ctx: { db } }) => {
+      await db.objectiveRecord.update({
+        where: { id: input.id },
+        data: { content: input.record },
+      });
+    }),
 });

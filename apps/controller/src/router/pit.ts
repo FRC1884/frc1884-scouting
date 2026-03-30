@@ -37,4 +37,33 @@ export const pitRouter = router({
   deleteAll: publicProcedure.mutation(async ({ ctx: { db } }) => {
     await db.pitRecord.deleteMany({});
   }),
+
+  findByTeam: publicProcedure
+    .input(
+      z.object({
+        teamNumber: z.number().int().gte(0),
+      })
+    )
+    .query(async ({ input, ctx: { db } }) => {
+      const records = (await db.pitRecord.findMany()) as unknown as {
+        id: string;
+        content: PitRecord;
+      }[];
+
+      return records.filter((r) => r.content.info.teamNumber === input.teamNumber);
+    }),
+
+  updateOne: publicProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        record: pitRecordSchema,
+      })
+    )
+    .mutation(async ({ input, ctx: { db } }) => {
+      await db.pitRecord.update({
+        where: { id: input.id },
+        data: { content: input.record },
+      });
+    }),
 });

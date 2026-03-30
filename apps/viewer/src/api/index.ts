@@ -1,4 +1,4 @@
-import type { AppRouter } from '@griffins-scout/api';
+import type { AppRouter } from '../../../controller/src/server';
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import type { inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
