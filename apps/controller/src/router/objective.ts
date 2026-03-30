@@ -4,7 +4,8 @@ import {
   objectiveRecordSchema,
 } from "@griffins-scout/game";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc.js";
+import { requireRole } from "../utils/auth.js";
+import { protectedProcedure, publicProcedure, router } from "../trpc.js";
 
 export const objectiveRouter = router({
   findAll: publicProcedure.query(async ({ ctx: { db } }) => {
@@ -61,5 +62,37 @@ export const objectiveRouter = router({
           r.content.info.matchType === input.matchType
         );
       }) as unknown as { id: string; content: ObjectiveRecord }[];
+    }),
+
+  findByTeam: publicProcedure
+    .input(
+      z.object({
+        teamNumber: objectiveInfoSchema.shape.teamNumber,
+      })
+    )
+    .query(async ({ input, ctx: { db } }) => {
+      const records = (await db.objectiveRecord.findMany({})) as unknown as {
+        id: string;
+        content: ObjectiveRecord;
+      }[];
+
+      return records.filter((r) => {
+        return r.content.info.teamNumber === input.teamNumber;
+      }) as unknown as { id: string; content: ObjectiveRecord }[];
+    }),
+
+  updateOne: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        record: objectiveRecordSchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      requireRole(ctx, ["ADMIN", "EDITOR"]);
+      await ctx.db.objectiveRecord.update({
+        where: { id: input.id },
+        data: { content: input.record },
+      });
     }),
 });
