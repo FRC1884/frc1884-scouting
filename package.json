@@ -28,5 +28,8 @@
   "dependencies": {
     "concurrently": "^7.3.0"
   },
-  "packageManager": "yarn@4.1.0"
+  "packageManager": "yarn@4.1.0",
+  "resolutions": {
+    "zod@npm:^3.20.6": "patch:zod@npm%3A3.22.4#~/.yarn/patches/zod-npm-3.22.4-2bccbc41b4.patch"
+  }
 }
