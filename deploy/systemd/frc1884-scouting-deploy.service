@@ -11,6 +11,8 @@ Group=frc1884-scouting-deploy
 SupplementaryGroups=frc1884-scouting-trigger
 WorkingDirectory=/srv/frc1884-scouting
 Environment=HOME=/var/cache/frc1884-scouting-deploy
+# ProcSubset hides CPU discovery; Wireit supports an explicit positive limit.
+Environment=WIREIT_PARALLEL=1
 EnvironmentFile=/etc/frc1884-scouting/controller.env
 EnvironmentFile=/run/agent-app-secrets/scouting-controller/env
 ExecStart=/usr/local/libexec/frc1884-scouting/deploy-jpclawhq.sh
