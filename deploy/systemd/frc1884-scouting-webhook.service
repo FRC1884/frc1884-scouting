@@ -4,13 +4,33 @@ After=network.target
 
 [Service]
 Type=simple
-User=mariano
-Group=mariano
-WorkingDirectory=/srv/frc1884-scouting
+User=frc1884-scouting-webhook
+Group=frc1884-scouting-webhook
+SupplementaryGroups=frc1884-scouting-trigger
+WorkingDirectory=/
 Environment=NODE_ENV=production
 Environment=PORT=3012
 EnvironmentFile=/etc/frc1884-scouting/webhook.env
-ExecStart=/usr/bin/node /srv/frc1884-scouting/scripts/github-webhook-server.mjs
+ExecStart=/usr/bin/node /usr/local/libexec/frc1884-scouting/github-webhook-server.mjs
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ProtectProc=invisible
+ProcSubset=pid
+UMask=0027
+TemporaryFileSystem=/srv:ro /opt:ro /var/lib:ro /var/cache:ro
+InaccessiblePaths=-/run/agent-app-secrets -/run/openclaw -/run/openclaw-prod -/run/agent-ssh-995 -/run/agent-ssh-1000 -/run/agent-1password
+UMask=0007
+BindPaths=/var/lib/frc1884-scouting-request
 Restart=always
 RestartSec=5
 

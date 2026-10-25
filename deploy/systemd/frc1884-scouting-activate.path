@@ -1,0 +1,9 @@
+[Unit]
+Description=Activate successful frc1884-scouting builds
+
+[Path]
+PathExists=/var/lib/frc1884-scouting-activate/ready
+Unit=frc1884-scouting-activate.service
+
+[Install]
+WantedBy=multi-user.target
