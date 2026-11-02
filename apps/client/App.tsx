@@ -25,9 +25,9 @@ export default function App() {
       links: [
         httpBatchLink({
           url: `http://IridiumLion.local:8080/trpc`,
+          transformer: superjson,
         }),
       ],
-      transformer: superjson,
     })
   );
 

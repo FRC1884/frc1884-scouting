@@ -1,6 +1,6 @@
 import { objectiveRecordSchema, pitRecordSchema } from "@griffins-scout/game";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc.js";
+import { MAX_BATCH, publicProcedure, router } from "../trpc.js";
 
 export const recordRouter = router({
   createRecord: publicProcedure
@@ -17,7 +17,7 @@ export const recordRouter = router({
               record: pitRecordSchema,
             })
           )
-      )
+      ).max(MAX_BATCH)
     )
     .mutation(async ({ input, ctx: { db } }) => {
       const obj = input

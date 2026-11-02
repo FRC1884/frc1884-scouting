@@ -125,14 +125,34 @@ test(
         pickupToLossOfPossesstionTime: 3.5,
       });
       const objectiveEntry = { type: "objective", record: objective };
+      // The controller caps upload batches at 1000 entries.
       const invalidBody = superjson.stringify([
+        objectiveEntry,
+        ...Array(999).fill(0),
+      ]);
+      const nestedInvalidBody = superjson.stringify([
+        objectiveEntry,
+        {
+          type: "objective",
+          record: {
+            ...objective,
+            teleop: {
+              ...objective.teleop,
+              offensiveCycles: Array(4096).fill(0),
+            },
+          },
+        },
+      ]);
+      const oversizedBody = superjson.stringify([
         objectiveEntry,
         ...Array(4096).fill(0),
       ]);
-      assert.ok(
-        Buffer.byteLength(invalidBody) < 100 * 1024,
-        "Invalid batch must reach validation below the HTTP JSON body limit"
-      );
+      for (const body of [invalidBody, nestedInvalidBody, oversizedBody]) {
+        assert.ok(
+          Buffer.byteLength(body) < 100 * 1024,
+          "Invalid batch must reach validation below the HTTP JSON body limit"
+        );
+      }
 
       const port = await unusedPort();
       directory = await mkdtemp(join(tmpdir(), "frc-security-http-"));
@@ -211,29 +231,45 @@ test(
           headers: { "Content-Type": "application/json" },
           body,
         });
-      const invalid = await upload(invalidBody);
-      assert.equal(
-        invalid.status,
-        400,
-        "Invalid upload must return BAD_REQUEST"
-      );
-      const rejection = superjson.deserialize((await envelope(invalid)).error);
-      assert.equal(rejection.data.code, "BAD_REQUEST");
-      const issues = JSON.parse(rejection.message);
-      assert.ok(
-        Array.isArray(issues) && issues.length === 1,
-        "Validation must report only the first failed array element"
-      );
-      function firstFailedElement(issue) {
-        assert.ok(
-          Array.isArray(issue.path) && issue.path[0] === 1,
-          "Every reported issue must belong to the first failed element"
+      async function rejectedIssue(body) {
+        const response = await upload(body);
+        assert.equal(
+          response.status,
+          400,
+          "Invalid upload must return BAD_REQUEST"
         );
-        for (const branch of issue.unionErrors ?? []) {
-          for (const nested of branch.issues ?? []) firstFailedElement(nested);
+        const rejection = superjson.deserialize(
+          (await envelope(response)).error
+        );
+        assert.equal(rejection.data.code, "BAD_REQUEST");
+        const issues = JSON.parse(rejection.message);
+        assert.ok(
+          Array.isArray(issues) && issues.length === 1,
+          "Validation must report only one issue"
+        );
+        return issues[0];
+      }
+      function onlyFirstNestedIssue(issue) {
+        for (const branch of issue.errors ?? []) {
+          assert.ok(
+            branch.length <= 1,
+            "Each union branch must report at most one issue"
+          );
+          branch.forEach(onlyFirstNestedIssue);
         }
       }
-      issues.forEach(firstFailedElement);
+      for (const body of [invalidBody, nestedInvalidBody]) {
+        const issue = await rejectedIssue(body);
+        assert.deepEqual(
+          issue.path,
+          [1],
+          "The reported issue must belong to the first failed element"
+        );
+        onlyFirstNestedIssue(issue);
+      }
+      const oversized = await rejectedIssue(oversizedBody);
+      assert.equal(oversized.code, "too_big", "Oversized batch must hit the cap");
+      assert.deepEqual(oversized.path, []);
       assert.ok(
         (await counts()).every((count) => count === 0),
         "Rejected batch must not persist even its valid prefix"
@@ -246,7 +282,7 @@ test(
       );
       await health.arrayBuffer();
       t.diagnostic(
-        "Invalid batch: HTTP 400, bounded first-element error, no rows, health 200"
+        "Invalid, nested-invalid and oversized batches: HTTP 400, one bounded issue, no rows, health 200"
       );
 
       async function read(path) {

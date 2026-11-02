@@ -2,7 +2,6 @@ import { logInfo } from "@griffins-scout/logger";
 import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from "cors";
 import express from "express";
-import { expressHandler } from "trpc-playground/handlers/express";
 import { createContext } from "./context.js";
 import { TBAMatch } from "./interfaces/match.js";
 import { blueAllianceRouter } from "./router/blueAlliance.js";
@@ -25,7 +24,6 @@ export type AppRouter = typeof appRouter;
 export type { TBAMatch };
 
 const trpcEndpoint = "/trpc";
-const trpcPlaygroundEndpoint = "/trpc-playground";
 const main = async () => {
   const app = express();
 
@@ -36,17 +34,6 @@ const main = async () => {
     trpcExpress.createExpressMiddleware({
       router: appRouter,
       createContext,
-    })
-  );
-  app.use(
-    trpcPlaygroundEndpoint,
-    await expressHandler({
-      trpcApiEndpoint: trpcEndpoint,
-      playgroundEndpoint: trpcPlaygroundEndpoint,
-      router: appRouter,
-      request: {
-        superjson: true,
-      },
     })
   );
 

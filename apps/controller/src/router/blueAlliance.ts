@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TBAMatch } from "../server.js";
 
-import { publicProcedure, router } from "../trpc.js";
+import { MAX_BATCH, publicProcedure, router } from "../trpc.js";
 // import {
 //   compLevelToMatchType,
 //   getMatches,
@@ -21,7 +21,7 @@ export const blueAllianceRouter = router({
   }),
 
   importFromTba: publicProcedure
-    .input(z.array(z.any()))
+    .input(z.array(z.any()).max(MAX_BATCH))
     .mutation(async ({ input, ctx: { db } }) => {
       await db.tBARecord.createMany({
         data: input.map((match) => ({

@@ -159,7 +159,7 @@ const GameSelect = () => {
   const [settings, setAppSettings] = useAtom(appSettingsAtom);
   const {
     data: matches,
-    isLoading,
+    isPending,
     error,
   } = trpc.blueAlliance.findAll.useQuery();
 
@@ -167,7 +167,7 @@ const GameSelect = () => {
     resolver: zodResolver(z.object({ match: z.string() })),
   });
 
-  if (isLoading) return <></>;
+  if (isPending) return <></>;
   if (error) return <InputWrapper label={error.message}></InputWrapper>;
   if (!matches) return <></>;
 
@@ -233,9 +233,9 @@ const GameSelect = () => {
 
 const NextMatchButton = () => {
   const [settings, setAppSettings] = useAtom(appSettingsAtom);
-  const { data: matches, isLoading } = trpc.blueAlliance.findAll.useQuery();
+  const { data: matches, isPending } = trpc.blueAlliance.findAll.useQuery();
 
-  if (isLoading) return <></>;
+  if (isPending) return <></>;
   if (!matches) return <></>;
 
   const handleNextMatch = () => {

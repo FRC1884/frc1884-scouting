@@ -3,7 +3,7 @@ import { SetStateAction, useAtom, WritableAtom } from 'jotai';
 import { Fragment } from 'react';
 import { DeepPartial, FieldError, Path, useForm } from 'react-hook-form';
 import { Text, View } from 'react-native';
-import { ZodObject, ZodSchema } from 'zod';
+import { ZodObject, ZodType } from 'zod';
 import { Button } from '~/components/Button';
 import { Container } from '~/components/Container';
 import { ObjectiveTopbar, PitTopbar } from '~/components/Topbar';
@@ -22,7 +22,7 @@ type Props<
   currentPage: B;
   screen: Screen;
   readonly keys: readonly Path<T>[];
-  zodSchema: ZodSchema;
+  zodSchema: ZodType<any, any>;
   defaults: ZodObject<any>;
   type: {
     name: 'objective' | 'pit';

@@ -4,7 +4,7 @@ import {
   objectiveRecordSchema,
 } from "@griffins-scout/game";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc.js";
+import { MAX_BATCH, publicProcedure, router } from "../trpc.js";
 
 export const objectiveRouter = router({
   findAll: publicProcedure.query(async ({ ctx: { db } }) => {
@@ -23,7 +23,7 @@ export const objectiveRouter = router({
     }),
 
   createMany: publicProcedure
-    .input(z.array(objectiveRecordSchema))
+    .input(z.array(objectiveRecordSchema).max(MAX_BATCH))
     .mutation(async ({ input, ctx: { db } }) => {
       await db.objectiveRecord.createMany({
         data: {
